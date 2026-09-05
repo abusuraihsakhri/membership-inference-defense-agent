@@ -3,7 +3,6 @@ Core Algorithmic Engine & Cryptographic / Biological Logic for MIA-Defense: Mode
 Domain: Privacy-Preserving Federated Healthcare & FHE
 Standard: Shokri Membership Inference Framework
 """
-import math
 from typing import Dict, Any, List, Optional
 from .models import FrontierPayload, AgentTelemetryAlert, ExecutionStatus
 

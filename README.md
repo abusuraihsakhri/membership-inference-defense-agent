@@ -1,6 +1,6 @@
 # Membership Inference Defense Agent
 
-> **Domain:** Privacy-Preserving Healthcare & Federated Computing  
+> **Domain:** Privacy-Preserving Healthcare & Federated Computing
 > **Reference Guidelines & Standards:** `HIPAA Safe Harbor §164.514 & Differential Privacy RDP`
 
 <div align="center">
@@ -18,7 +18,7 @@
 
 ## 📖 What It Does
 
-**Membership Inference Defense Agent** is an advanced analytical and computational platform implementing Shadow model training & membership inference attack (MIA) risk estimator.
+**Membership Inference Defense Agent** is an advanced analytical and computational platform implementing Shadow model training & membership inference attack (MIA) risk estimation. It provides multi-worker consensus evaluation with cryptographic audit trails and PHI protection.
 
 ---
 
@@ -27,50 +27,92 @@
 - **Deterministic Calculation Engine**: Strict compliance with standard reference formulations and thresholds.
 - **Risk & Urgency Classification**: Multi-tier categorization with automated clinical/operational action recommendations.
 - **Validation & Guardrails**: Rigorous input bounds checking and anomaly detection.
+- **Multi-Worker Consensus**: InvariantQC, SafetyEscalation, and ProtocolConformance workers.
+
+---
+
+## 🚀 Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/abusuraihsakhri/membership-inference-defense-agent.git
+cd membership-inference-defense-agent
+
+# Install dependencies
+pip install -e .
+
+# Or with test dependencies
+pip install -e ".[test]"
+
+# Configure environment (recommended for production)
+cp .env.example .env
+# Edit .env and set a secure AUDIT_SECRET_KEY
+```
+
+### Environment Variables
+
+| Variable | Description | Default |
+|:---------|:------------|:--------|
+| `AUDIT_SECRET_KEY` | HMAC-SHA256 key for audit trail integrity | Random (ephemeral) |
+| `MODEL_PROVIDER` | LLM provider (`mock`, `ollama`, `claude`, `openai`) | `mock` |
 
 ---
 
 ## 💻 CLI Quickstart & Usage
 
-### 1. Guided Interactive Mode
+### 1. Single Task Evaluation
 ```bash
-python cli.py
+python cli.py audit
+python cli.py audit --task-id TASK-001 --target KEY-01 --primary 28.5 --secondary 14.2
 ```
 
-### 2. Direct Parameterized Evaluation
+### 2. Batch Processing
 ```bash
-python cli.py --task-id <value> --target <value> --primary <value> --secondary <value>
+python cli.py batch -i sample.csv -o results.csv
+```
+
+### 3. System Query
+```bash
+python cli.py chat "What is the system status?"
+```
+
+### 4. Verify Audit Integrity
+```bash
+python cli.py verify-audit
+```
+
+### 5. Launch API Server
+```bash
+python cli.py serve --host 127.0.0.1 --port 8000
 ```
 
 ### Parameter Reference
-- `--task-id`: Specifies input measurement or parameter value.
-- `--target`: Specifies input measurement or parameter value.
-- `--primary`: Specifies input measurement or parameter value.
-- `--secondary`: Specifies input measurement or parameter value.
-- `--critical`: Specifies input measurement or parameter value.
-- `--status`: Specifies input measurement or parameter value.
-- `--input`: Specifies input measurement or parameter value.
-- `--output`: Specifies input measurement or parameter value.
+- `--task-id`: Unique task/case identifier
+- `--target`: Entity, patient key, or target identifier
+- `--primary`: Primary domain measurement or score (float)
+- `--secondary`: Secondary metric or confidence score (float)
+- `--critical`: Flag for emergency escalation
+- `--status`: Status code or phenotype descriptor
 
 ### Input Data Schema
 
 | Field | Description | Requirement |
 |:------|:------------|:------------|
-| `task_id` | Parameter / observation metric | Required |
-| `target_identifier` | Parameter / observation metric | Required |
-| `primary_metric` | Parameter / observation metric | Required |
-| `secondary_metric` | Parameter / observation metric | Required |
-| `is_critical_flag` | Parameter / observation metric | Required |
-| `status_descriptor` | Parameter / observation metric | Required |
+| `task_id` | Unique task identifier | Required |
+| `target_identifier` | Target entity identifier | Required |
+| `primary_metric` | Primary measurement value | Required |
+| `secondary_metric` | Secondary measurement value | Optional |
+| `is_critical_flag` | Emergency escalation flag | Optional |
+| `status_descriptor` | Status/phenotype descriptor | Optional |
 
 ---
 
 ## 🛡️ Security & Enterprise Architecture
 
-* **Zero-PHI Outbound Interceptor:** Active AST and regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers.
-* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition.
+* **Zero-PHI Outbound Interceptor:** Active regex inspection blocking SSNs, MRNs, phone numbers, emails, DOBs, and patient identifiers.
+* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs with signature verification for every evaluation and state transition.
+* **Secure Key Management:** Audit keys configured via `AUDIT_SECRET_KEY` environment variable (no hardcoded secrets).
 * **Air-Gapped LLM Reasoning Adapter:** Agnostic integration for local Ollama instances (`llama3`, `mistral`), Claude 3.5 Sonnet, GPT-4o, and deterministic test mocks.
-* **Active Learning Bayesian Calibration:** Dynamic tracker updating worker reliability weights and monitoring Brier calibration drift.
 * **FastAPI & Prometheus Telemetry:** Exposes OpenAPI 3.1 REST endpoints and operational Prometheus metrics (`/metrics`).
 
 ---
@@ -86,14 +128,67 @@ pytest -v
 Execute high-throughput batch simulation benchmarks:
 
 ```bash
-python simulator.py --tasks 1000 --concurrency 8
+python simulator.py 1000
 ```
 
 ---
 
 ## 🐳 Container Deployment
 
+### Docker
 ```bash
 docker build -t membership-inference-defense-agent .
-docker run -p 8000:8000 membership-inference-defense-agent
+docker run -p 8000:8000 -e AUDIT_SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(32))") membership-inference-defense-agent
 ```
+
+### Docker Compose
+```bash
+# Create .env file with required variables
+echo "AUDIT_SECRET_KEY=$(python -c 'import secrets; print(secrets.token_hex(32))')" > .env
+
+# Launch
+docker-compose up -d
+```
+
+---
+
+## 📁 Project Structure
+
+```
+membership-inference-defense-agent/
+├── agents/                  # Core agent modules
+│   ├── api.py              # FastAPI REST endpoints
+│   ├── base.py             # Security, PHI guard, audit trail
+│   ├── learning.py         # Bayesian calibration engine
+│   ├── llm_factory.py      # LLM provider factory
+│   ├── metrics.py          # Prometheus metrics collector
+│   ├── models.py           # Pydantic data models
+│   ├── streamer.py         # WebSocket telemetry
+│   ├── supervisor.py       # Master orchestrator
+│   └── workers.py          # Specialized worker agents
+├── mia_defense/            # Alternative MIA defense implementation
+│   ├── agents.py           # Sub-agents (shadow trainer, etc.)
+│   ├── cli.py              # CLI entry point
+│   ├── engine.py           # Core algorithmic engine
+│   ├── models.py           # Data models
+│   └── server.py           # FastAPI server factory
+├── tests/                  # Test suite
+│   ├── test_enrichment.py
+│   ├── test_membership_inference_defense_agent.py
+│   ├── test_mia_defense.py
+│   └── test_security.py    # Security & edge case tests
+├── web/index.html          # Operations console UI
+├── cli.py                  # Top-level CLI entry point
+├── simulator.py            # High-throughput simulation
+├── enrichment.py           # Enrichment feature engines
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+└── LICENSE
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

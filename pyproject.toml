@@ -17,7 +17,16 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 requires-python = ">=3.9"
-dependencies = []
+dependencies = [
+    "pydantic>=2.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+]
 
 [project.scripts]
 membership-inference-defense-engine = "mia_defense.cli:main"
@@ -25,3 +34,6 @@ membership-inference-defense-engine = "mia_defense.cli:main"
 [project.urls]
 Homepage = "https://github.com/abusuraihsakhri/membership-inference-defense-engine"
 Repository = "https://github.com/abusuraihsakhri/membership-inference-defense-engine.git"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
