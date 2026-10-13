@@ -1,7 +1,7 @@
 {
-  "suite_name": "Membership Inference Defense Engine Golden Benchmark Test Suite",
-  "system_slug": "membership-inference-defense-engine",
-  "standard_reference": "CAP / CLSI / NIST Standards",
+  "suite_name": "Project-defined operational rule fixtures",
+  "system_slug": "membership-inference-defense-agent",
+  "standard_reference": "Demonstration thresholds; not a scientific or regulatory MIA benchmark",
   "test_cases": [
     {
       "case_id": "BENCH-01-NOMINAL",
@@ -37,7 +37,7 @@
       "payload": {
         "task_id": "TASK-BENCH-03",
         "target_identifier": "TARGET-CRITICAL-03",
-        "primary_metric": 18.0,
+        "primary_metric": 18,
         "secondary_metric": 19.5,
         "status_descriptor": "DISCORDANT_ANOMALY",
         "is_critical_flag": true

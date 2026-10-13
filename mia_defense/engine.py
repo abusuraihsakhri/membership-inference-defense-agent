@@ -17,7 +17,7 @@ class FrontierDomainEngine:
         if value > cls.PRIMARY_BOUND:
             return {
                 "summary": "Primary Domain Boundary Deviation",
-                "details": f"Parameter value ({value:.3f}) exceeds operational threshold ({cls.PRIMARY_BOUND:.1f}) under Shokri Membership Inference Framework.",
+                "details": f"Parameter value ({value:.3f}) exceeds project-defined threshold ({cls.PRIMARY_BOUND:.1f}); this is not an empirical MIA estimate.",
                 "remediation": "Engage parameter recalibration and algorithmic verification routine.",
             }
         return None
@@ -38,7 +38,7 @@ class FrontierDomainEngine:
         if any(flag in desc_upper for flag in ["VIOLATION", "DISCORDANT", "ANOMALY", "MUTANT", "LEAK"]):
             return {
                 "summary": "Specification / Protocol Anomaly Identified",
-                "details": f"Telemetry status flag '{descriptor}' violates Shokri Membership Inference Framework conformance matrix.",
+                "details": f"Telemetry status flag '{descriptor}' matches project-defined anomaly keywords; no formal framework conformance test has run.",
                 "remediation": "Execute automated rollback or secondary consensus verification.",
             }
         return None

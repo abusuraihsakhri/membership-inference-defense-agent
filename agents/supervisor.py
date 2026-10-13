@@ -2,6 +2,7 @@
 Supervisor Orchestrator & Operations Intelligence for Membership Inference Defense Agent.
 Domain: Privacy-Preserving Federated Healthcare & FHE
 """
+import json
 import uuid
 from typing import Dict, Any, List, Optional
 from .base import AuditLogger, ActionExecutor, PHIGuard
@@ -25,6 +26,8 @@ class SystemSupervisor:
         PHIGuard.assert_no_phi(payload.task_id)
         PHIGuard.assert_no_phi(payload.target_identifier)
         PHIGuard.assert_no_phi(payload.status_descriptor)
+        PHIGuard.assert_no_phi(actor)
+        PHIGuard.assert_no_phi(json.dumps(payload.attributes, ensure_ascii=False, default=str))
 
         # Multi-worker evaluations
         all_alerts: List[AgentAlert] = []
@@ -66,7 +69,7 @@ class SystemSupervisor:
             total_alerts=len(all_alerts),
             critical_alerts_count=crit_count,
             alerts=all_alerts,
-            consensus_summary=f"Multi-agent consensus completed with status [{overall_urgency.value}]. Total alerts: {len(all_alerts)}.",
+            consensus_summary=f"Independent rule checks completed with status [{overall_urgency.value}]. Total alerts: {len(all_alerts)}.",
             audit_hash=audit_entry["current_hash"],
         )
 
@@ -75,5 +78,5 @@ class SystemSupervisor:
 
     def query_supervisory_chat(self, query: str) -> str:
         PHIGuard.assert_no_phi(query)
-        prompt = f"Supervisor inquiry for Membership Inference Defense Agent under HIPAA Safe Harbor §164.514 / Google SecAgg Standards: {query}"
+        prompt = f"Supervisor inquiry for Membership Inference Defense Agent using project-defined operational rules (not a HIPAA/DP certification): {query}"
         return self.llm.invoke(prompt)

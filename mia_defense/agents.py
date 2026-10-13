@@ -105,6 +105,6 @@ class MIADefenseCoordinator:
         if "status" in q or "ledger" in q:
             return f"MIA-Defense: Model Shadow Training & Membership Inference Risk Agent currently managing {len(self.execution_ledger)} execution tasks in air-gapped memory."
         elif "standard" in q or "spec" in q:
-            return "Active runtime operating strictly according to Shokri Membership Inference Framework specifications."
+            return "The code uses Shokri Membership Inference Framework terminology, but currently applies only project-defined rule checks, not shadow-model training."
         else:
             return f"MIA-Defense: Model Shadow Training & Membership Inference Risk Agent executive coordinator online. Zero-telemetry on-premises surveillance active."

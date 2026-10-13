@@ -2,9 +2,11 @@
 FastAPI REST API Server for Membership Inference Defense Agent.
 """
 from typing import Dict, Any, List
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from .base import AuditLogger, PHIGuard
+from .base import AuditLogger, PHIGuard, SecurityException
 from .models import SystemTaskPayload, ConsensusDossier
 from .supervisor import SystemSupervisor
 
@@ -12,9 +14,14 @@ supervisor = SystemSupervisor(model_provider="mock")
 
 app = FastAPI(
     title="Membership Inference Defense Agent API",
-    description="Enterprise Distributed Component Platform (Privacy-Preserving Federated Healthcare & FHE)",
+    description="Rule-based operational audit demo; not formal membership-inference or privacy accounting",
     version="3.0.0-ENTERPRISE",
 )
+
+
+@app.get("/", include_in_schema=False)
+def web_console():
+    return FileResponse(Path(__file__).resolve().parent.parent / "web" / "index.html")
 
 
 class ChatRequest(BaseModel):
@@ -23,7 +30,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "HEALTHY", "service": "membership-inference-defense-agent", "domain": "Privacy-Preserving Federated Healthcare & FHE", "standard": "HIPAA Safe Harbor §164.514 / Google SecAgg Standards", "version": "3.0.0-ENTERPRISE"}
+    return {"status": "HEALTHY", "service": "membership-inference-defense-agent", "domain": "Privacy-Preserving Federated Healthcare & FHE", "standard": "Project-defined operational thresholds (not a compliance standard)", "version": "3.0.0-ENTERPRISE"}
 
 
 @app.get("/metrics")
@@ -31,14 +38,17 @@ def metrics():
     return {
         "dossiers_processed_total": len(supervisor.dossier_registry),
         "audit_blocks_total": len(AuditLogger.get_trail()),
-        "system_status": "NOMINAL_OPTIMAL"
+        "system_status": "RUNNING"
     }
 
 
 @app.post("/api/audit")
 def api_audit(payload: SystemTaskPayload):
-    dossier = supervisor.process_task(payload)
-    return dossier.to_dict()
+    try:
+        dossier = supervisor.process_task(payload)
+        return dossier.to_dict()
+    except SecurityException:
+        raise HTTPException(status_code=422, detail="Input contains a potentially sensitive identifier") from None
 
 
 @app.post("/api/chat")
@@ -46,8 +56,8 @@ def api_chat(req: ChatRequest):
     try:
         ans = supervisor.query_supervisory_chat(req.query)
         return {"response": ans}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except SecurityException:
+        raise HTTPException(status_code=422, detail="Input contains a potentially sensitive identifier") from None
 
 
 @app.get("/api/audit/logs")
