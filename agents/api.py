@@ -14,7 +14,7 @@ supervisor = SystemSupervisor(model_provider="mock")
 
 app = FastAPI(
     title="Membership Inference Defense Agent API",
-    description="Enterprise Distributed Component Platform (Privacy-Preserving Federated Healthcare & FHE)",
+    description="Rule-based operational audit demo; not formal membership-inference or privacy accounting",
     version="3.0.0-ENTERPRISE",
 )
 
@@ -30,7 +30,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "HEALTHY", "service": "membership-inference-defense-agent", "domain": "Privacy-Preserving Federated Healthcare & FHE", "standard": "HIPAA Safe Harbor §164.514 / Google SecAgg Standards", "version": "3.0.0-ENTERPRISE"}
+    return {"status": "HEALTHY", "service": "membership-inference-defense-agent", "domain": "Privacy-Preserving Federated Healthcare & FHE", "standard": "Project-defined operational thresholds (not a compliance standard)", "version": "3.0.0-ENTERPRISE"}
 
 
 @app.get("/metrics")
@@ -38,7 +38,7 @@ def metrics():
     return {
         "dossiers_processed_total": len(supervisor.dossier_registry),
         "audit_blocks_total": len(AuditLogger.get_trail()),
-        "system_status": "NOMINAL_OPTIMAL"
+        "system_status": "RUNNING"
     }
 
 
