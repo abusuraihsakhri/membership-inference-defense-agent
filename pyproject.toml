@@ -41,7 +41,10 @@ Repository = "https://github.com/abusuraihsakhri/membership-inference-defense-ag
 py-modules = ["cli", "enrichment", "simulator", "mia_defense_app"]
 
 [tool.setuptools.packages.find]
-include = ["agents*", "mia_defense*"]
+include = ["agents*", "mia_defense*", "web*"]
+
+[tool.setuptools.package-data]
+web = ["index.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
