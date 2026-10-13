@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Membership Inference Defense Engine API",
-    "description": "Enterprise Distributed Component Platform (Clinical & Cryptographic AI) adhering to CAP / CLSI / NIST Standards.",
+    "title": "Membership Inference Defense Agent — illustrative endpoint summary",
+    "description": "Rule-based operational auditing only. Not an implementation of membership inference attacks, differential privacy, or regulatory compliance. Use /openapi.json from the running FastAPI service for the complete schema.",
     "version": "3.0.0-ENTERPRISE",
     "contact": {
       "name": "Dr. Abu Suraih Sakhri",
@@ -22,17 +22,17 @@
     },
     "/metrics": {
       "get": {
-        "summary": "Prometheus operational metrics",
+        "summary": "Read in-process JSON counters",
         "responses": {
           "200": {
-            "description": "Prometheus text metrics"
+            "description": "JSON counters for task registry size and audit blocks"
           }
         }
       }
     },
     "/api/audit": {
       "post": {
-        "summary": "Dispatch task payload across specialized workers",
+        "summary": "Run operational threshold checks",
         "requestBody": {
           "content": {
             "application/json": {
@@ -69,14 +69,14 @@
         },
         "responses": {
           "200": {
-            "description": "Consensus dossier with HMAC signature"
+            "description": "Rule evaluation dossier with in-memory HMAC audit hash"
           }
         }
       }
     },
     "/api/chat": {
       "post": {
-        "summary": "Air-gapped supervisory conversational assistant",
+        "summary": "Return deterministic mock response",
         "requestBody": {
           "content": {
             "application/json": {
@@ -107,6 +107,16 @@
         "responses": {
           "200": {
             "description": "Cryptographic audit trail"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Serve browser rule-audit console",
+        "responses": {
+          "200": {
+            "description": "HTML console"
           }
         }
       }
