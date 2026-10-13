@@ -40,6 +40,7 @@ jobs:
         pathlib.Path('/tmp/mia-console.js').write_text(script.group(1), encoding='utf-8')
         PY
         node --check /tmp/mia-console.js
+        node scripts/smoke-web.cjs
 
     - name: Run Pytest Suite
       run: |
