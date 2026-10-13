@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Membership Inference Defense Engine — Operations Console</title>
+    <title>Membership Inference Defense — Rule Audit Preview</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,7 +20,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Inter, system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             padding: 2rem;
@@ -118,117 +118,178 @@
         }
         .metric-val { font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 0.25rem; }
         .metric-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+        .mode-note { color: var(--text-muted); font-size: 0.87rem; line-height: 1.5; margin: 0.8rem 0 1.3rem; }
+        .privacy-note { border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; margin-bottom: 1.3rem; color: var(--text-muted); line-height: 1.5; }
+        .privacy-note strong { color: var(--text); }
+        input[type="checkbox"] { width: auto; margin-right: .5rem; accent-color: var(--accent); }
+        label[for="is_critical"] { display: inline-flex; align-items: center; }
+        :focus-visible { outline: 2px solid #93c5fd; outline-offset: 3px; }
+        .terminal { overflow-wrap: anywhere; height: auto; min-height: 280px; max-height: 540px; }
+        @media (max-width: 850px) {
+            body { padding: 1rem; }
+            .grid { grid-template-columns: 1fr; }
+            .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+            .header { gap: 1rem; flex-wrap: wrap; }
+            .card { padding: 1.1rem; }
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="header-title">
-            <h1>Membership Inference Defense Engine</h1>
-            <p>Domain: Clinical & Cryptographic AI | Standard: CAP / CLSI / NIST Standards | LabMind-Atlas Architecture</p>
+            <h1>Membership Inference Defense — Rule Audit</h1>
+            <p>Deterministic operational thresholds · not a membership-inference attack estimator</p>
         </div>
         <div>
-            <span class="badge">Air-Gapped Active</span>
-            <span class="badge" style="background: rgba(16,185,129,0.2); color: #10b981; border-color: #10b981;">Zero-PHI Guard Active</span>
+            <span class="badge">Offline preview available</span>
+            
         </div>
     </div>
+
+    <p class="privacy-note"><strong>Privacy:</strong> Local previews stay in this browser tab and do not contact an API. Server audits send entered data to the configured same-origin service. Do not enter patient information; regex screening is not verified de-identification. Local previews do not generate cryptographic audit records or quantify privacy leakage.</p>
 
     <div class="metrics-bar">
         <div class="metric-box">
             <div class="metric-label">System Status</div>
-            <div class="metric-val" style="color: var(--success);" id="m-status">OPTIMAL</div>
+            <div class="metric-val" style="color: var(--success);" id="m-status">READY</div>
         </div>
         <div class="metric-box">
             <div class="metric-label">Tasks Processed</div>
-            <div class="metric-val" id="m-tasks">142</div>
+            <div class="metric-val" id="m-tasks">0</div>
         </div>
         <div class="metric-box">
             <div class="metric-label">Audit Blocks Signed</div>
-            <div class="metric-val" id="m-audit">142</div>
+            <div class="metric-val" id="m-audit">0</div>
         </div>
         <div class="metric-box">
-            <div class="metric-label">PHI Interceptions</div>
+            <div class="metric-label">Rejected API Requests</div>
             <div class="metric-val" style="color: var(--accent);" id="m-phi">0</div>
         </div>
     </div>
 
     <div class="grid">
         <div class="card">
-            <h2>⚙️ Dispatch Distributed Component Audit</h2>
+            <h2>Run a Rule-Based Audit</h2>
             <div class="form-group">
-                <label>Task / Sample ID</label>
-                <input type="text" id="task_id" value="TASK-2026-LIVE-01">
+                <label for="task_id">Task / Sample ID</label>
+                <input type="text" id="task_id" maxlength="120" required value="TASK-2026-LIVE-01">
             </div>
             <div class="form-group">
-                <label>Target Identifier</label>
-                <input type="text" id="target_id" value="SPECIMEN-ALPHA-77">
+                <label for="target_id">Target Identifier</label>
+                <input type="text" id="target_id" maxlength="120" required value="SPECIMEN-ALPHA-77">
             </div>
             <div class="form-group">
-                <label>Primary Measurement / Value</label>
-                <input type="number" id="primary_metric" value="29.4" step="0.1">
+                <label for="primary_metric">Primary Measurement / Value</label>
+                <input type="number" id="primary_metric" required value="29.4" step="0.1">
             </div>
             <div class="form-group">
-                <label>Secondary Metric / Kinetic Index</label>
-                <input type="number" id="secondary_metric" value="14.8" step="0.1">
+                <label for="secondary_metric">Secondary Metric / Kinetic Index</label>
+                <input type="number" id="secondary_metric" required value="14.8" step="0.1">
             </div>
             <div class="form-group">
-                <label>Status / Phenotype Descriptor</label>
-                <input type="text" id="status_descriptor" value="DISCORDANT_ANOMALY">
+                <label for="status_descriptor">Status / Phenotype Descriptor</label>
+                <input type="text" id="status_descriptor" maxlength="120" required value="DISCORDANT_ANOMALY">
             </div>
             <div class="form-group">
-                <label><input type="checkbox" id="is_critical" checked> Trigger Emergency / Critical Flag</label>
+                <label for="is_critical"><input type="checkbox" id="is_critical" checked> Trigger Critical Flag</label>
             </div>
-            <button class="btn" onclick="runAudit()">Execute Distributed Component Audit</button>
+            <div class="form-group">
+                <label for="execution_mode">Execution mode</label>
+                <select id="execution_mode">
+                    <option value="local">Local preview — no network or audit signature</option>
+                    <option value="server">Server audit — requires local FastAPI backend</option>
+                </select>
+                <p class="mode-note">Rules: primary metric &gt; 25 → elevated; secondary metric &gt; 12 → elevated; critical flag → critical; anomaly descriptors → elevated. These are project-specific operational rules, not validated MIA probabilities.</p>
+            </div>
+            <button class="btn" type="button" onclick="runAudit()">Evaluate Input</button>
         </div>
 
         <div class="card">
-            <h2>📊 Real-Time Consensus Dossier & Audit Log</h2>
-            <div class="terminal" id="outputConsole">// Membership Inference Defense Engine Operations Console Ready
-// Connection established with Air-Gapped Supervisor
-// Cryptographic HMAC-SHA256 audit ledger loaded.
-// Ready for live task payload dispatch...</div>
+            <h2>Evaluation Result</h2>
+            <div class="terminal" id="outputConsole" role="status" aria-live="polite">Choose an execution mode and evaluate example inputs. No analysis has run yet.</div>
         </div>
     </div>
 
     <script>
-        async function runAudit() {
-            const consoleEl = document.getElementById('outputConsole');
-            consoleEl.innerText = "// Dispatching task across specialized workers...
-// Invoking InvariantQCWorker, SafetyEscalationWorker, ProtocolWorker...";
+        const el = id => document.getElementById(id);
+        let processed = 0;
+        let signed = 0;
+        let rejected = 0;
 
-            const payload = {
-                task_id: document.getElementById('task_id').value,
-                target_identifier: document.getElementById('target_id').value,
-                primary_metric: parseFloat(document.getElementById('primary_metric').value),
-                secondary_metric: parseFloat(document.getElementById('secondary_metric').value),
-                status_descriptor: document.getElementById('status_descriptor').value,
-                is_critical_flag: document.getElementById('is_critical').checked
+        function localEvaluate(payload) {
+            const alerts = [];
+            if (payload.primary_metric > 25) {
+                alerts.push({origin_worker: "InvariantQCWorker", urgency: "ELEVATED_RISK", summary: "Primary metric above 25"});
+            }
+            if (payload.is_critical_flag || payload.secondary_metric > 12) {
+                alerts.push({origin_worker: "SafetyEscalationWorker", urgency: payload.is_critical_flag ? "CRITICAL_STAT_PANIC" : "ELEVATED_RISK", summary: "Secondary threshold or critical flag"});
+            }
+            if (["DISCORDANT", "ANOMALY", "MUTANT", "VIOLATION", "FAIL", "REJECT"].some(term => payload.status_descriptor.toUpperCase().includes(term))) {
+                alerts.push({origin_worker: "ProtocolConformanceWorker", urgency: "ELEVATED_RISK", summary: "Status descriptor contains a project-defined anomaly term"});
+            }
+            const critical = alerts.filter(a => a.urgency === "CRITICAL_STAT_PANIC").length;
+            const status = critical ? "CRITICAL_STAT_PANIC" : alerts.length ? "ELEVATED_RISK" : "ROUTINE";
+            return {
+                mode: "LOCAL_PREVIEW", task_id: payload.task_id,
+                target_identifier: payload.target_identifier,
+                overall_urgency: status,
+                integrity_status: critical ? "RECALIBRATION_REQUIRED" : alerts.length ? "DISCORDANT_ANOMALY" : "VALIDATED_OPTIMAL",
+                total_alerts: alerts.length, critical_alerts_count: critical,
+                alerts: alerts,
+                notice: "Local rule preview only. No model attack test, PHI certification, HMAC signature, or persistent audit record."
             };
+        }
 
+        async function runAudit() {
+            const consoleEl = el("outputConsole");
+            const primaryField = el("primary_metric");
+            const secondaryField = el("secondary_metric");
+            const payload = {
+                task_id: el("task_id").value.trim(),
+                target_identifier: el("target_id").value.trim(),
+                primary_metric: Number(primaryField.value),
+                secondary_metric: Number(secondaryField.value),
+                status_descriptor: el("status_descriptor").value.trim(),
+                is_critical_flag: el("is_critical").checked
+            };
+            if (!payload.task_id || !payload.target_identifier || !payload.status_descriptor ||
+                !primaryField.value.trim() || !secondaryField.value.trim() ||
+                !Number.isFinite(payload.primary_metric) || !Number.isFinite(payload.secondary_metric)) {
+                consoleEl.textContent = "Enter identifiers, a status descriptor, and finite numeric metrics.";
+                return;
+            }
+            const serverMode = el("execution_mode").value === "server";
+            el("m-status").textContent = serverMode ? "REQUESTING" : "LOCAL";
             try {
-                const res = await fetch('/api/audit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                consoleEl.innerText = JSON.stringify(data, null, 2);
-                document.getElementById('m-tasks').innerText = parseInt(document.getElementById('m-tasks').innerText) + 1;
-                document.getElementById('m-audit').innerText = parseInt(document.getElementById('m-audit').innerText) + 1;
-            } catch (err) {
-                consoleEl.innerText = "// Offline / Simulation Output:\n" + JSON.stringify({
-                    dossier_id: "DOSSIER-SIM-" + Math.floor(Math.random()*10000),
-                    system: "membership-inference-defense-engine",
-                    domain: "Clinical & Cryptographic AI",
-                    task_id: payload.task_id,
-                    overall_urgency: payload.is_critical_flag ? "CRITICAL_STAT_PANIC" : "ELEVATED_RISK",
-                    integrity_status: "DISCORDANT_ANOMALY",
-                    alerts: [
-                        { worker: "InvariantQCWorker", alert: "Primary metric exceeds upper reference bound" },
-                        { worker: "SafetyEscalationWorker", alert: "Critical emergency interlock flag active" }
-                    ],
-                    audit_hash: "HMAC_SHA256_e83f9a72b941d6c381f9"
-                }, null, 2);
+                let data;
+                if (serverMode) {
+                    const response = await fetch("./api/audit", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(payload)
+                    });
+                    data = await response.json();
+                    if (!response.ok) {
+                        if (response.status === 422) { rejected++; el("m-phi").textContent = String(rejected); }
+                        throw new Error("API HTTP " + response.status + ": " + JSON.stringify(data.detail || data));
+                    }
+                    if (typeof data.audit_hash === "string" && data.audit_hash.length > 0) {
+                        signed++;
+                        el("m-audit").textContent = String(signed);
+                    }
+                } else {
+                    data = localEvaluate(payload);
+                }
+                processed++;
+                el("m-tasks").textContent = String(processed);
+                el("m-status").textContent = data.overall_urgency || "DONE";
+                consoleEl.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                el("m-status").textContent = "ERROR";
+                consoleEl.textContent = "Server audit failed: " + error.message +
+                    "\nNo local simulation has been substituted. Choose Local preview to run offline.";
             }
         }
     </script>
