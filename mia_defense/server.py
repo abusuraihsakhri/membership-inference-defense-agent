@@ -17,7 +17,7 @@ def create_app():
 
         app = FastAPI(
             title="MIA-Defense: Model Shadow Training & Membership Inference Risk Agent",
-            description="Trains shadow models to calculate precision-recall of Membership Inference Attacks (MIA) against healthcare diagnostic classifiers.",
+            description="Runs project-defined operational threshold checks; does not train shadow models or estimate membership-inference attack performance.",
             version="2.0.0-FRONTIER",
         )
 
