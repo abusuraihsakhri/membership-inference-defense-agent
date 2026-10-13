@@ -81,3 +81,18 @@ def test_api_nominal_and_schema():
     assert response.status_code == 200
     assert response.json()["overall_urgency"] == "ROUTINE"
     assert len(response.json()["audit_hash"]) == 64
+
+
+def test_operational_golden_examples():
+    import json
+    data = json.loads((Path(__file__).parent.parent / "benchmark_dataset.json").read_text())
+    supervisor = SystemSupervisor()
+    for case in data["test_cases"]:
+        if "payload" in case:
+            dossier = supervisor.process_task(SystemTaskPayload(**case["payload"]))
+            assert dossier.overall_urgency.value == case["expected_urgency"]
+            assert dossier.integrity_status.value == case["expected_integrity"]
+        elif "adversarial_prompt" in case:
+            from agents.base import PHIGuard
+            with pytest.raises(SecurityException):
+                PHIGuard.assert_no_phi(case["adversarial_prompt"])
