@@ -120,7 +120,7 @@ class AuditTrail:
 
     def get_trail(self) -> List[Dict[str, Any]]:
         """Return a snapshot so callers cannot mutate the live audit chain."""
-        return deepcopy(self.logs
+        return deepcopy(self.logs)
 
 
 GLOBAL_AUDIT = AuditTrail()
