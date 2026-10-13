@@ -1,7 +1,7 @@
 """
 Pydantic v2 schemas and data definitions for Membership Inference Defense Agent.
 Domain: Privacy-Preserving Federated Healthcare & FHE
-Standard: HIPAA Safe Harbor §164.514 / Google SecAgg Standards
+Standard: Project-defined demonstration rules (not externally validated)
 """
 import datetime
 from enum import Enum
@@ -39,7 +39,7 @@ class AgentAlert(BaseModel):
     summary: str
     technical_details: str
     actionable_remediation: str
-    standard_reference: str = "HIPAA Safe Harbor §164.514 / Google SecAgg Standards"
+    standard_reference: str = "Project-defined demonstration rules (not externally validated)"
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:
@@ -57,7 +57,7 @@ class ConsensusDossier(BaseModel):
     total_alerts: int
     critical_alerts_count: int
     alerts: List[AgentAlert]
-    standard_reference: str = "HIPAA Safe Harbor §164.514 / Google SecAgg Standards"
+    standard_reference: str = "Project-defined demonstration rules (not externally validated)"
     consensus_summary: str
     audit_hash: str
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
