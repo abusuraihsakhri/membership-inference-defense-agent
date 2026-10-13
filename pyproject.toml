@@ -30,10 +30,17 @@ test = [
 
 [project.scripts]
 membership-inference-defense-engine = "mia_defense.cli:main"
+membership-inference-defense-agent = "cli:main"
 
 [project.urls]
-Homepage = "https://github.com/abusuraihsakhri/membership-inference-defense-engine"
-Repository = "https://github.com/abusuraihsakhri/membership-inference-defense-engine.git"
+Homepage = "https://github.com/abusuraihsakhri/membership-inference-defense-agent"
+Repository = "https://github.com/abusuraihsakhri/membership-inference-defense-agent.git"
+
+[tool.setuptools]
+py-modules = ["cli", "enrichment", "simulator", "mia_defense_app"]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "mia_defense*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
